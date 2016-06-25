@@ -1,4 +1,4 @@
-package com.phearom.balancing;
+package com.phearom.balancing.ui;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -7,11 +7,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioGroup;
 
+import com.phearom.balancing.R;
 import com.phearom.balancing.databinding.ActivityMainBinding;
+import com.phearom.balancing.widget.SelectionView;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mBinding;
@@ -20,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView mNavViewRight;
     private ActionBarDrawerToggle mToggle;
 
+    private SelectionView<String> selectionView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,8 +34,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mBinding.toolbar);
 
         mDrawerLayout = mBinding.drawer;
-        mNavViewLeft = mBinding.navLeft;
-        mNavViewRight = mBinding.navRight;
+//        mNavViewLeft = mBinding.navLeft;
+//        mNavViewRight = mBinding.navRight;
+        mBinding.navGroupLeft.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            }
+        });
 
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mBinding.toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.addDrawerListener(mToggle);
@@ -58,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
         mToggle.syncState();
     }
 
+    public View intCustomMenu(MenuItem item) {
+        AppCompatButton button = (AppCompatButton) LayoutInflater.from(this).inflate(R.layout.content_nav_left, null);
+        button.setText(item.getTitle());
+        button.setHovered(true);
+        return button;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -68,7 +88,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_option:
-                mDrawerLayout.openDrawer(GravityCompat.END);
+                if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    mDrawerLayout.closeDrawer(GravityCompat.END);
+                } else {
+                    mDrawerLayout.openDrawer(GravityCompat.END);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

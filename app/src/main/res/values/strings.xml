@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Balancing</string>
+
+    <string-array name="nav_spinner_items">
+        <item>All Accounts</item>
+        <item>Cash</item>
+        <item>Payment card</item>
+    </string-array>
 </resources>
